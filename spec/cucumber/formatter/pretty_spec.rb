@@ -9,11 +9,11 @@ module Cucumber
       extend SpecHelperDsl
       include SpecHelper
 
+      before { Cucumber::Term::ANSIColor.coloring = false }
       let(:out) { StringIO.new }
 
       context "With no options" do
         before(:each) do
-          Cucumber::Term::ANSIColor.coloring = false
           @formatter = Pretty.new(runtime, out, {})
         end
 
@@ -235,7 +235,6 @@ OUTPUT
 
       context "With --no-multiline passed as an option" do
         before(:each) do
-          Cucumber::Term::ANSIColor.coloring = false
           @formatter = Pretty.new(runtime, out, {:no_multiline => true})
         end
 
