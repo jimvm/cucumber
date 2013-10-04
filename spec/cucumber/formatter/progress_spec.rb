@@ -5,11 +5,10 @@ require 'cucumber/formatter/progress'
 module Cucumber
   module Formatter
     describe Progress do
-
+      let(:out) { StringIO.new }
       before(:each) do
         Cucumber::Term::ANSIColor.coloring = false
-        @out = StringIO.new
-        progress = Cucumber::Formatter::Progress.new(double("Runtime"), @out, {})
+        progress = Cucumber::Formatter::Progress.new(double("Runtime"), out, {})
         @visitor = Cucumber::Ast::TreeWalker.new(nil, [progress])
       end
 
@@ -21,14 +20,14 @@ module Cucumber
           @visitor.visit_outline_table(double) do
             @visitor.visit_table_cell_value('value', nil)
           end
-          @out.string.should == "FF"
+          out.string.should == "FF"
         end
       end
 
       describe "visiting a table cell which is a table header" do
         it "should not output anything" do
           @visitor.visit_table_cell_value('value', :skipped_param)
-          @out.string.should == ""
+          out.string.should == ""
         end
       end
 
