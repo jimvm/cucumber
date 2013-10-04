@@ -5,30 +5,29 @@ require 'cucumber/formatter/progress'
 module Cucumber
   module Formatter
     describe Progress do
-      before { Cucumber::Term::ANSIColor.coloring = false }
-      let(:out) { StringIO.new }
+      before        { Cucumber::Term::ANSIColor.coloring = false }
+      let(:out)     { StringIO.new }
       let(:visitor) { Cucumber::Ast::TreeWalker.new(nil, [subject]) }
-      subject { Progress.new(double("Runtime"), out, {}) }
+      subject       { Progress.new(double('Runtime'), out, {}) }
 
-      describe "visiting a table cell value without a status" do
+      describe 'visiting a table cell value without a status' do
         # TODO: this seems bizarre. Why not just mark the cell as skipped or noop?
-        it "should take the status from the last run step" do
+        it 'should take the status from the last run step' do
           step_result = Ast::StepResult.new('', '', nil, :failed, nil, 10, nil, nil)
           step_result.accept(visitor)
           visitor.visit_outline_table(double) do
             visitor.visit_table_cell_value('value', nil)
           end
-          out.string.should == "FF"
+          out.string.should == 'FF'
         end
       end
 
-      describe "visiting a table cell which is a table header" do
-        it "should not output anything" do
+      describe 'visiting a table cell which is a table header' do
+        it 'should not output anything' do
           visitor.visit_table_cell_value('value', :skipped_param)
-          out.string.should == ""
+          out.string.should == ''
         end
       end
-
     end
   end
 end
