@@ -25,7 +25,7 @@ module Cucumber
       describe 'visiting a table cell which is a table header' do
         it 'should not output anything' do
           visitor.visit_table_cell_value('value', :skipped_param)
-          out.string.should == ''
+          out.string.should be_empty
         end
       end
     end
