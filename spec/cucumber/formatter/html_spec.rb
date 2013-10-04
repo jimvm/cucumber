@@ -18,9 +18,9 @@ module Cucumber
         end
       end
 
+      let(:out) { StringIO.new }
       before(:each) do
-        @out = StringIO.new
-        @formatter = Html.new(runtime, @out, {})
+        @formatter = Html.new(runtime, out, {})
         runtime.visitor = @formatter
       end
 
@@ -31,7 +31,7 @@ module Cucumber
       describe "given a single feature" do
         before(:each) do
           run_defined_feature
-          @doc = Nokogiri.HTML(@out.string)
+          @doc = Nokogiri.HTML(out.string)
         end
 
         describe "basic feature" do
@@ -43,7 +43,7 @@ module Cucumber
           FEATURE
 
           it "should output a main container div" do
-            @out.string.should =~ /\<div class="cucumber"\>/
+            out.string.should =~ /\<div class="cucumber"\>/
           end
         end
 
@@ -53,8 +53,8 @@ module Cucumber
             Feature: Foo
           FEATURE
 
-          it { @out.string.should =~ /^\<!DOCTYPE/ }
-          it { @out.string.should =~ /\<\/html\>$/ }
+          it { out.string.should =~ /^\<!DOCTYPE/ }
+          it { out.string.should =~ /\<\/html\>$/ }
           it { @doc.should have_css_node('.feature .comment', /Healthy/) }
         end
 
@@ -158,7 +158,7 @@ module Cucumber
           FEATURE
 
           it { @doc.should have_css_node('.feature .scenario table td', /foo/) }
-          it { @out.string.include?('makeYellow(\'scenario_1\')').should be_false }
+          it { out.string.include?('makeYellow(\'scenario_1\')').should be_false }
         end
 
         describe "with a table in the background and the scenario" do
@@ -228,8 +228,8 @@ module Cucumber
             FEATURE
 
           it { @doc.should have_css_node('.feature .background .step.failed', /eek/) }
-          it { @out.string.should_not include('makeRed(\'scenario_0\')') }
-          it { @out.string.should include('makeRed(\'background_0\')') }
+          it { out.string.should_not include('makeRed(\'scenario_0\')') }
+          it { out.string.should include('makeRed(\'background_0\')') }
           it { @doc.should_not have_css_node('.feature .scenario .step.failed', //) }
           it { @doc.should have_css_node('.feature .scenario .step.undefined', /yay/) }
           it { @doc.should have_css_node('.feature .background .backtrace', //) }

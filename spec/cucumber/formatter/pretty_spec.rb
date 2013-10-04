@@ -9,11 +9,12 @@ module Cucumber
       extend SpecHelperDsl
       include SpecHelper
 
+      let(:out) { StringIO.new }
+
       context "With no options" do
         before(:each) do
           Cucumber::Term::ANSIColor.coloring = false
-          @out = StringIO.new
-          @formatter = Pretty.new(runtime, @out, {})
+          @formatter = Pretty.new(runtime, out, {})
         end
 
         describe "given a single feature" do
@@ -30,8 +31,8 @@ module Cucumber
             FEATURE
 
             it "prints out the feature description" do
-              @out.string.should include "Feature: Bananas"
-              @out.string.should include "I must eat bananas"
+              out.string.should include "Feature: Bananas"
+              out.string.should include "I must eat bananas"
             end
 
           end
@@ -45,10 +46,10 @@ module Cucumber
             FEATURE
 
             it "outputs the scenario name" do
-              @out.string.should include "Scenario: Monkey eats banana"
+              out.string.should include "Scenario: Monkey eats banana"
             end
             it "outputs the step" do
-              @out.string.should include "Given there are bananas"
+              out.string.should include "Given there are bananas"
             end
           end
 
@@ -81,14 +82,14 @@ module Cucumber
                | carrots  |
               OUTPUT
               lines.split("\n").each do |line|
-                @out.string.should include line.strip
+                out.string.should include line.strip
               end
             end
             it "has 4 undefined scenarios" do
-              @out.string.should include "4 scenarios (4 undefined)"
+              out.string.should include "4 scenarios (4 undefined)"
             end
             it "has 4 undefined steps" do
-              @out.string.should include "4 steps (4 undefined)"
+              out.string.should include "4 steps (4 undefined)"
             end
 
           end
@@ -120,7 +121,7 @@ module Cucumber
                | apples |
               OUTPUT
               lines.split("\n").each do |line|
-                @out.string.should include line.strip
+                out.string.should include line.strip
               end
             end
           end
@@ -137,7 +138,7 @@ module Cucumber
             FEATURE
 
             it "displays the pystring nested" do
-              @out.string.should include <<OUTPUT
+              out.string.should include <<OUTPUT
       """
       foo
       """
@@ -157,7 +158,7 @@ OUTPUT
             FEATURE
 
             it "displays the multiline string" do
-              @out.string.should include <<OUTPUT
+              out.string.should include <<OUTPUT
     Given there are monkeys:
       | name |
       | foo  |
@@ -181,14 +182,14 @@ OUTPUT
             FEATURE
 
             it "displays the table for the background" do
-              @out.string.should include <<OUTPUT
+              out.string.should include <<OUTPUT
     Given table:
       | a | b |
       | c | d |
 OUTPUT
             end
             it "displays the table for the scenario" do
-              @out.string.should include <<OUTPUT
+              out.string.should include <<OUTPUT
     Given another table:
       | e | f |
       | g | h |
@@ -213,7 +214,7 @@ OUTPUT
             FEATURE
 
             it "displays the background py string" do
-              @out.string.should include <<OUTPUT
+              out.string.should include <<OUTPUT
     Given stuff:
       """
       foo
@@ -221,7 +222,7 @@ OUTPUT
 OUTPUT
             end
             it "displays the scenario py string" do
-              @out.string.should include <<OUTPUT
+              out.string.should include <<OUTPUT
     Given more stuff:
       """
       bar
@@ -235,8 +236,7 @@ OUTPUT
       context "With --no-multiline passed as an option" do
         before(:each) do
           Cucumber::Term::ANSIColor.coloring = false
-          @out = StringIO.new
-          @formatter = Pretty.new(runtime, @out, {:no_multiline => true})
+          @formatter = Pretty.new(runtime, out, {:no_multiline => true})
         end
 
         describe "given a single feature" do
@@ -253,8 +253,8 @@ OUTPUT
             FEATURE
 
             it "prints out the feature description" do
-              @out.string.should include "Feature: Bananas"
-              @out.string.should include "I must eat bananas"
+              out.string.should include "Feature: Bananas"
+              out.string.should include "I must eat bananas"
             end
 
           end
@@ -268,10 +268,10 @@ OUTPUT
             FEATURE
 
             it "outputs the scenario name" do
-              @out.string.should include "Scenario: Monkey eats banana"
+              out.string.should include "Scenario: Monkey eats banana"
             end
             it "outputs the step" do
-              @out.string.should include "Given there are bananas"
+              out.string.should include "Given there are bananas"
             end
           end
 
@@ -304,14 +304,14 @@ OUTPUT
                | carrots  |
               OUTPUT
               lines.split("\n").each do |line|
-                @out.string.should include line.strip
+                out.string.should include line.strip
               end
             end
             it "has 4 undefined scenarios" do
-              @out.string.should include "4 scenarios (4 undefined)"
+              out.string.should include "4 scenarios (4 undefined)"
             end
             it "has 4 undefined steps" do
-              @out.string.should include "4 steps (4 undefined)"
+              out.string.should include "4 steps (4 undefined)"
             end
           end
 
@@ -327,7 +327,7 @@ OUTPUT
             FEATURE
 
             it "does not display the pystring" do
-              @out.string.should_not include <<OUTPUT
+              out.string.should_not include <<OUTPUT
       """
       foo
       """
@@ -347,7 +347,7 @@ OUTPUT
             FEATURE
 
             it "does not display the multiline string" do
-              @out.string.should_not include <<OUTPUT
+              out.string.should_not include <<OUTPUT
       | name |
       | foo  |
       | bar  |
@@ -370,13 +370,13 @@ OUTPUT
             FEATURE
 
             it "does not display the table for the background" do
-              @out.string.should_not include <<OUTPUT
+              out.string.should_not include <<OUTPUT
       | a | b |
       | c | d |
 OUTPUT
             end
             it "does not display the table for the scenario" do
-              @out.string.should_not include <<OUTPUT
+              out.string.should_not include <<OUTPUT
       | e | f |
       | g | h |
 OUTPUT
@@ -400,14 +400,14 @@ OUTPUT
             FEATURE
 
             it "does not display the background py string" do
-              @out.string.should_not include <<OUTPUT
+              out.string.should_not include <<OUTPUT
       """
       foo
       """
 OUTPUT
             end
             it "does not display the scenario py string" do
-              @out.string.should_not include <<OUTPUT
+              out.string.should_not include <<OUTPUT
       """
       bar
       """
