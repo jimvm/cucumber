@@ -12,13 +12,12 @@ module Cucumber
       before { Cucumber::Term::ANSIColor.coloring = false }
       let(:out) { StringIO.new }
 
+      before(:each) { run_defined_feature }
+
       context "With no options" do
         subject { Pretty.new(runtime, out, {}) }
 
         describe "given a single feature" do
-          before(:each) do
-            run_defined_feature
-          end
 
           describe "basic feature" do
             define_feature <<-FEATURE
@@ -235,9 +234,6 @@ OUTPUT
         subject { Pretty.new(runtime, out, {:no_multiline => true}) }
 
         describe "given a single feature" do
-          before(:each) do
-            run_defined_feature
-          end
 
           describe "basic feature" do
             define_feature <<-FEATURE
