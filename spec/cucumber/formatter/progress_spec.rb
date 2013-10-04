@@ -8,7 +8,7 @@ module Cucumber
       before        { Cucumber::Term::ANSIColor.coloring = false }
       let(:out)     { StringIO.new }
       let(:visitor) { Cucumber::Ast::TreeWalker.new(nil, [subject]) }
-      subject       { Progress.new(double('Runtime'), out, {}) }
+      subject       { Progress.new(nil, out, {}) }
 
       describe 'visiting a table cell value without a status' do
         # TODO: this seems bizarre. Why not just mark the cell as skipped or noop?
