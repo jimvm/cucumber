@@ -13,9 +13,7 @@ module Cucumber
       let(:out) { StringIO.new }
 
       context "With no options" do
-        before(:each) do
-          @formatter = Pretty.new(runtime, out, {})
-        end
+        subject { Pretty.new(runtime, out, {}) }
 
         describe "given a single feature" do
           before(:each) do
@@ -234,9 +232,7 @@ OUTPUT
       end
 
       context "With --no-multiline passed as an option" do
-        before(:each) do
-          @formatter = Pretty.new(runtime, out, {:no_multiline => true})
-        end
+        subject { Pretty.new(runtime, out, {:no_multiline => true}) }
 
         describe "given a single feature" do
           before(:each) do

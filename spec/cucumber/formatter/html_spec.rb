@@ -19,13 +19,13 @@ module Cucumber
       end
 
       let(:out) { StringIO.new }
+      subject { Html.new(runtime, out, {}) }
       before(:each) do
-        @formatter = Html.new(runtime, out, {})
-        runtime.visitor = @formatter
+        runtime.visitor = subject
       end
 
       it "should not raise an error when visiting a blank feature name" do
-        lambda { @formatter.feature_name("Feature", "") }.should_not raise_error
+        lambda { subject.feature_name("Feature", "") }.should_not raise_error
       end
 
       describe "given a single feature" do

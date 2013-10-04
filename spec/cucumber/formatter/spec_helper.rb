@@ -36,7 +36,7 @@ module Cucumber
 
       def run(features)
         configuration = Cucumber::Configuration.default
-        tree_walker = Cucumber::Ast::TreeWalker.new(runtime, [@formatter], configuration)
+        tree_walker = Cucumber::Ast::TreeWalker.new(runtime, [subject], configuration)
         features.accept(tree_walker)
       end
 

@@ -20,8 +20,8 @@ module Cucumber::Formatter
 
     before(:each) do
       File.stub(:directory?).and_return(true)
-      @formatter = TestDoubleJunitFormatter.new(runtime, '', {})
     end
+    subject { TestDoubleJunitFormatter.new(runtime, '', {}) }
 
     after(:each) do
       $stdout = STDOUT
@@ -30,7 +30,7 @@ module Cucumber::Formatter
     describe "should be able to strip control chars from cdata" do
       before(:each) do
         run_defined_feature
-        @doc = Nokogiri.XML(@formatter.written_files.values.first)
+        @doc = Nokogiri.XML(subject.written_files.values.first)
       end
       define_feature "
           Feature: One passing scenario, one failing scenario
@@ -75,7 +75,7 @@ module Cucumber::Formatter
     describe "given a single feature" do
       before(:each) do
         run_defined_feature
-        @doc = Nokogiri.XML(@formatter.written_files.values.first)
+        @doc = Nokogiri.XML(subject.written_files.values.first)
       end
 
       describe "with a single scenario" do
@@ -114,7 +114,7 @@ module Cucumber::Formatter
         }, File.join('features', 'some', 'path', 'spec.feature')
 
         it 'writes the filename including the subdirectory' do
-          @formatter.written_files.keys.first.should == File.join('', 'TEST-features-some-path-spec.xml')
+          subject.written_files.keys.first.should == File.join('', 'TEST-features-some-path-spec.xml')
         end
       end
 
