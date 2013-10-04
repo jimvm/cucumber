@@ -31,8 +31,8 @@ module Cucumber
       describe "given a single feature" do
         before(:each) do
           run_defined_feature
-          @doc = Nokogiri.HTML(out.string)
         end
+        let(:doc) { Nokogiri.HTML(out.string) }
 
         describe "basic feature" do
           define_feature <<-FEATURE
@@ -55,7 +55,7 @@ module Cucumber
 
           it { out.string.should =~ /^\<!DOCTYPE/ }
           it { out.string.should =~ /\<\/html\>$/ }
-          it { @doc.should have_css_node('.feature .comment', /Healthy/) }
+          it { doc.should have_css_node('.feature .comment', /Healthy/) }
         end
 
         describe "with a tag" do
@@ -64,7 +64,7 @@ module Cucumber
             Feature: can't have standalone tag :)
           FEATURE
 
-          it { @doc.should have_css_node('.feature .tag', /foo/) }
+          it { doc.should have_css_node('.feature .tag', /foo/) }
         end
 
         describe "with a narrative" do
@@ -75,8 +75,8 @@ module Cucumber
               I must eat bananas
           FEATURE
 
-          it { @doc.should have_css_node('.feature h2', /Bananas/) }
-          it { @doc.should have_css_node('.feature .narrative', /must eat bananas/) }
+          it { doc.should have_css_node('.feature h2', /Bananas/) }
+          it { doc.should have_css_node('.feature .narrative', /must eat bananas/) }
         end
 
         describe "with a background" do
@@ -90,7 +90,7 @@ module Cucumber
               When the monkey eats a banana
           FEATURE
 
-          it { @doc.should have_css_node('.feature .background', /there are bananas/) }
+          it { doc.should have_css_node('.feature .background', /there are bananas/) }
         end
 
         describe "with a scenario" do
@@ -101,8 +101,8 @@ module Cucumber
               Given there are bananas
           FEATURE
 
-          it { @doc.should have_css_node('.feature h3', /Monkey eats banana/) }
-          it { @doc.should have_css_node('.feature .scenario .step', /there are bananas/) }
+          it { doc.should have_css_node('.feature h3', /Monkey eats banana/) }
+          it { doc.should have_css_node('.feature .scenario .step', /there are bananas/) }
         end
 
         describe "with a scenario outline" do
@@ -122,11 +122,11 @@ module Cucumber
                | carrots  |
           FEATURE
 
-          it { @doc.should have_css_node('.feature .scenario.outline h4', /Fruit/) }
-          it { @doc.should have_css_node('.feature .scenario.outline h4', /Vegetables/) }
-          it { @doc.css('.feature .scenario.outline h4').length.should == 2}
-          it { @doc.should have_css_node('.feature .scenario.outline table', //) }
-          it { @doc.should have_css_node('.feature .scenario.outline table td', /carrots/) }
+          it { doc.should have_css_node('.feature .scenario.outline h4', /Fruit/) }
+          it { doc.should have_css_node('.feature .scenario.outline h4', /Vegetables/) }
+          it { doc.css('.feature .scenario.outline h4').length.should == 2}
+          it { doc.should have_css_node('.feature .scenario.outline table', //) }
+          it { doc.should have_css_node('.feature .scenario.outline table td', /carrots/) }
         end
 
         describe "with a step with a py string" do
@@ -140,7 +140,7 @@ module Cucumber
                """
           FEATURE
 
-          it { @doc.should have_css_node('.feature .scenario .val', /foo/) }
+          it { doc.should have_css_node('.feature .scenario .val', /foo/) }
         end
 
         describe "with a multiline step arg" do
@@ -157,7 +157,7 @@ module Cucumber
                | bar  |
           FEATURE
 
-          it { @doc.should have_css_node('.feature .scenario table td', /foo/) }
+          it { doc.should have_css_node('.feature .scenario table td', /foo/) }
           it { out.string.include?('makeYellow(\'scenario_1\')').should be_false }
         end
 
@@ -175,7 +175,7 @@ module Cucumber
                | g | h |
           FEATURE
 
-          it { @doc.css('td').length.should == 8 }
+          it { doc.css('td').length.should == 8 }
         end
 
         describe "with a py string in the background and the scenario" do
@@ -194,8 +194,8 @@ module Cucumber
                 """
           FEATURE
 
-          it { @doc.css('.feature .background pre.val').length.should == 1 }
-          it { @doc.css('.feature .scenario pre.val').length.should == 1 }
+          it { doc.css('.feature .background pre.val').length.should == 1 }
+          it { doc.css('.feature .scenario pre.val').length.should == 1 }
         end
 
         describe "with a step that fails in the scenario" do
@@ -210,8 +210,8 @@ module Cucumber
               Given boo
             FEATURE
 
-          it { @doc.should have_css_node('.feature .scenario .step.failed .message', /eek/) }
-          it { @doc.should have_css_node('.feature .scenario .step.failed .message', /StandardError/) }
+          it { doc.should have_css_node('.feature .scenario .step.failed .message', /eek/) }
+          it { doc.should have_css_node('.feature .scenario .step.failed .message', /StandardError/) }
         end
 
         describe "with a step that fails in the background" do
@@ -227,13 +227,13 @@ module Cucumber
               Given yay
             FEATURE
 
-          it { @doc.should have_css_node('.feature .background .step.failed', /eek/) }
+          it { doc.should have_css_node('.feature .background .step.failed', /eek/) }
           it { out.string.should_not include('makeRed(\'scenario_0\')') }
           it { out.string.should include('makeRed(\'background_0\')') }
-          it { @doc.should_not have_css_node('.feature .scenario .step.failed', //) }
-          it { @doc.should have_css_node('.feature .scenario .step.undefined', /yay/) }
-          it { @doc.should have_css_node('.feature .background .backtrace', //) }
-          it { @doc.should_not have_css_node('.feature .scenario .backtrace', //) }
+          it { doc.should_not have_css_node('.feature .scenario .step.failed', //) }
+          it { doc.should have_css_node('.feature .scenario .step.undefined', /yay/) }
+          it { doc.should have_css_node('.feature .background .backtrace', //) }
+          it { doc.should_not have_css_node('.feature .scenario .backtrace', //) }
         end
 
         describe "with a step that embeds a snapshot" do
@@ -247,7 +247,7 @@ module Cucumber
               Given snap
             FEATURE
 
-          it { @doc.css('.embed img').first.attributes['src'].to_s.should == "snapshot.jpeg" }
+          it { doc.css('.embed img').first.attributes['src'].to_s.should == "snapshot.jpeg" }
         end
 
         describe "with an undefined Given step then an undefined And step" do
@@ -258,7 +258,7 @@ module Cucumber
               And another undefined step
             FEATURE
 
-          it { @doc.css('pre').map { |pre| /^(Given|And)/.match(pre.text)[1] }.should == ["Given", "Given"] }
+          it { doc.css('pre').map { |pre| /^(Given|And)/.match(pre.text)[1] }.should == ["Given", "Given"] }
         end
 
       end

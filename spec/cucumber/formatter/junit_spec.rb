@@ -30,8 +30,9 @@ module Cucumber::Formatter
     describe "should be able to strip control chars from cdata" do
       before(:each) do
         run_defined_feature
-        @doc = Nokogiri.XML(subject.written_files.values.first)
       end
+      let(:doc) { Nokogiri.XML(subject.written_files.values.first) }
+
       define_feature "
           Feature: One passing scenario, one failing scenario
 
@@ -57,7 +58,7 @@ module Cucumber::Formatter
         end
       end
       
-      it { @doc.xpath('//testsuite/system-out').first.content.should match(/\s+boo boo\s+/) }
+      it { doc.xpath('//testsuite/system-out').first.content.should match(/\s+boo boo\s+/) }
     end
 
     describe "a feature with no name" do
@@ -75,8 +76,8 @@ module Cucumber::Formatter
     describe "given a single feature" do
       before(:each) do
         run_defined_feature
-        @doc = Nokogiri.XML(subject.written_files.values.first)
       end
+      let(:doc) { Nokogiri.XML(subject.written_files.values.first) }
 
       describe "with a single scenario" do
         define_feature <<-FEATURE
@@ -86,22 +87,22 @@ module Cucumber::Formatter
               Given a passing scenario
         FEATURE
 
-        it { @doc.to_s.should =~ /One passing scenario, one failing scenario/ }
+        it { doc.to_s.should =~ /One passing scenario, one failing scenario/ }
 
         it 'should have a root system-out node' do
-          @doc.xpath('//testsuite/system-out').size.should == 1
+          doc.xpath('//testsuite/system-out').size.should == 1
         end
 
         it 'should have a root system-err node' do
-          @doc.xpath('//testsuite/system-err').size.should == 1
+          doc.xpath('//testsuite/system-err').size.should == 1
         end
 
         it 'should have a system-out node under <testcase/>' do
-          @doc.xpath('//testcase/system-out').size.should == 1
+          doc.xpath('//testcase/system-out').size.should == 1
         end
 
         it 'should have a system-err node under <testcase/>' do
-          @doc.xpath('//testcase/system-err').size.should == 1
+          doc.xpath('//testcase/system-err').size.should == 1
         end
       end
 
@@ -141,13 +142,13 @@ module Cucumber::Formatter
               | Big Mac  |
         FEATURE
 
-        it { @doc.to_s.should =~ /Eat things when hungry/ }
-        it { @doc.to_s.should =~ /Cucumber/ }
-        it { @doc.to_s.should =~ /Whisky/ }
-        it { @doc.to_s.should =~ /Big Mac/ }
-        it { @doc.to_s.should_not =~ /Things/ }
-        it { @doc.to_s.should_not =~ /Good|Evil/ }
-        it { @doc.to_s.should_not =~ /type="skipped"/}
+        it { doc.to_s.should =~ /Eat things when hungry/ }
+        it { doc.to_s.should =~ /Cucumber/ }
+        it { doc.to_s.should =~ /Whisky/ }
+        it { doc.to_s.should =~ /Big Mac/ }
+        it { doc.to_s.should_not =~ /Things/ }
+        it { doc.to_s.should_not =~ /Good|Evil/ }
+        it { doc.to_s.should_not =~ /type="skipped"/}
       end
 
       describe "scenario with skipped test in junit report" do
@@ -163,7 +164,7 @@ module Cucumber::Formatter
               | undefined  |
         FEATURE
 
-        it { @doc.to_s.should =~ /skipped="2"/}
+        it { doc.to_s.should =~ /skipped="2"/}
       end
 
       describe "with a regular data table scenario" do
@@ -186,8 +187,8 @@ module Cucumber::Formatter
 
         FEATURE
         # these type of tables shouldn't crash (or generate test cases)
-        it { @doc.to_s.should_not =~ /milk/ }
-        it { @doc.to_s.should_not =~ /cookies/ }
+        it { doc.to_s.should_not =~ /milk/ }
+        it { doc.to_s.should_not =~ /cookies/ }
       end
     end
   end
