@@ -6,10 +6,10 @@ module Cucumber
   module Formatter
     describe Progress do
       let(:out) { StringIO.new }
+      subject { Progress.new(double("Runtime"), out, {}) }
       before(:each) do
         Cucumber::Term::ANSIColor.coloring = false
-        progress = Cucumber::Formatter::Progress.new(double("Runtime"), out, {})
-        @visitor = Cucumber::Ast::TreeWalker.new(nil, [progress])
+        @visitor = Cucumber::Ast::TreeWalker.new(nil, [subject])
       end
 
       describe "visiting a table cell value without a status" do
