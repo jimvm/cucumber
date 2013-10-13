@@ -50,13 +50,6 @@ module Cucumber
         end
       end
 
-      describe '#before_feature_element' do
-        it 'sets exception_raised to false' do
-          subject.before_feature_element
-          subject.exception_raised.should be_false
-        end
-      end
-
       describe '#after_feature_element' do
         context 'when an exception is raised' do
           before { subject.exception }
@@ -100,14 +93,6 @@ module Cucumber
             subject.before_steps
             out.string.should be_empty
           end
-        end
-      end
-
-      describe '#after_steps' do
-        before { subject.after_steps }
-
-        it 'sets exception_raised to "false"' do
-          subject.exception_raised.should be_false
         end
       end
 

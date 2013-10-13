@@ -23,18 +23,12 @@ module Cucumber
         print_summary(features)
       end
 
-      def before_feature_element(*args)
-      end
-
       def after_feature_element(*args)
         progress(:failed) if @exception_raised
       end
 
       def before_steps(*args)
         progress(:failed) if @exception_raised
-      end
-
-      def after_steps(*args)
       end
 
       def after_step_result(step_result)
