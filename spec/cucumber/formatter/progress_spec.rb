@@ -65,6 +65,11 @@ module Cucumber
             subject.after_feature_element
             out.string.should == 'F'
           end
+
+          it 'cleans up exception state' do
+            expect { subject.after_feature_element }.
+              to change { subject.exception_raised }.from(true).to(false)
+          end
         end
 
         context 'when no exception is raised' do
@@ -77,29 +82,23 @@ module Cucumber
 
       describe '#before_steps' do
         context 'when an exception is raised' do
-          before do
-            subject.exception
-            subject.before_steps
-          end
+          before { subject.exception }
 
           it 'prints out an "F"' do
+            subject.before_steps
             out.string.should == 'F'
           end
 
-          it 'sets exception_raised to "false"' do
-            subject.exception_raised.should be_false
+          it 'cleans up exception state' do
+            expect { subject.before_steps }.
+              to change { subject.exception_raised }.from(true).to(false)
           end
         end
 
         context 'when no exception is raised' do
-          before { subject.before_steps }
-
           it 'prints out nothing' do
+            subject.before_steps
             out.string.should be_empty
-          end
-
-          it 'sets exception_raised to "false"' do
-            subject.exception_raised.should be_false
           end
         end
       end

@@ -24,21 +24,17 @@ module Cucumber
       end
 
       def before_feature_element(*args)
-        @exception_raised = false
       end
 
       def after_feature_element(*args)
-        progress(:failed) if (defined? @exception_raised) and (@exception_raised)
-        @exception_raised = false
+        progress(:failed) if @exception_raised
       end
 
       def before_steps(*args)
-        progress(:failed) if (defined? @exception_raised) and (@exception_raised)
-        @exception_raised = false
+        progress(:failed) if @exception_raised
       end
 
       def after_steps(*args)
-        @exception_raised = false
       end
 
       def after_step_result(step_result)
@@ -86,10 +82,15 @@ module Cucumber
         char = CHARS[status]
         @io.print(format_string(char, status))
         @io.flush
+        reset_exception(status)
       end
 
       def table_header_cell?(status)
         status == :skipped_param
+      end
+
+      def reset_exception(status)
+        @exception_raised = false if status == :failed
       end
     end
   end
