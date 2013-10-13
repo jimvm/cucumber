@@ -47,7 +47,7 @@ module Cucumber
       def table_cell_value(value, status)
         return unless @outline_table
         status ||= @status
-        progress(status) unless table_header_cell?(status)
+        progress(status) if not_a_table_header_cell?(status)
       end
 
       def exception(*args)
@@ -79,8 +79,8 @@ module Cucumber
         reset_exception(status)
       end
 
-      def table_header_cell?(status)
-        status == :skipped_param
+      def not_a_table_header_cell?(status)
+        status != :skipped_param
       end
 
       def reset_exception(status)
