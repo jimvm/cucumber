@@ -7,13 +7,13 @@ module Cucumber
     class Progress
       include Console
       include Io
-      attr_reader :runtime
+      attr_reader :runtime, :exception_raised, :status
 
       def initialize(runtime, path_or_io, options)
         @runtime, @io, @options = runtime, ensure_io(path_or_io, "progress"), options
       end
 
-      def before_features(features)
+      def before_features(*features)
         print_profile_information
       end
 
