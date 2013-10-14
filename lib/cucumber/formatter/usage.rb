@@ -26,8 +26,10 @@ module Cucumber
 
       def after_step_result(step_result)
         step_definition = step_result.step_definition
+
         unless step_definition.nil? # nil if it's from a scenario outline
-          stepdef_key = StepDefKey.new(step_definition.regexp_source, step_definition.file_colon_line)
+          stepdef_key = StepDefKey.new(step_definition.regexp_source,
+                                       step_definition.file_colon_line)
 
           @stepdef_to_match[stepdef_key] << {
             :keyword => step_result.keyword,
@@ -37,6 +39,7 @@ module Cucumber
             :duration => @duration
           }
         end
+
         super
       end
 
@@ -45,14 +48,21 @@ module Cucumber
       def print_summary(features)
         add_unused_stepdefs
         aggregate_info
+        steps = sort_step_defs
+        print_step_defs(steps)
+        super
+      end
 
+      def sort_step_defs
         if @options[:dry_run]
-          keys = @stepdef_to_match.keys.sort {|a,b| a.regexp_source <=> b.regexp_source}
+          @stepdef_to_match.keys.sort {|a,b| a.regexp_source <=> b.regexp_source}
         else
-          keys = @stepdef_to_match.keys.sort {|a,b| a.mean_duration <=> b.mean_duration}.reverse
+          @stepdef_to_match.keys.sort {|a,b| a.mean_duration <=> b.mean_duration}.reverse
         end
+      end
 
-        keys.each do |stepdef_key|
+      def print_step_defs(steps)
+        steps.each do |stepdef_key|
           print_step_definition(stepdef_key)
 
           if @stepdef_to_match[stepdef_key].any?
@@ -62,7 +72,6 @@ module Cucumber
           end
         end
         @io.puts
-        super
       end
 
       def print_step_definition(stepdef_key)
