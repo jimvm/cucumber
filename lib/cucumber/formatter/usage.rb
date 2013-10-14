@@ -40,6 +40,8 @@ module Cucumber
         super
       end
 
+      private
+
       def print_summary(features)
         add_unused_stepdefs
         aggregate_info
