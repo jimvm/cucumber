@@ -17,7 +17,6 @@ module Cucumber
       end
 
       def before_step(step)
-        @step = step
         @start_time = Time.now
       end
 
@@ -34,7 +33,7 @@ module Cucumber
             :keyword => step_result.keyword,
             :step_match => step_result.step_match,
             :status => step_result.status,
-            :file_colon_line => @step.file_colon_line,
+            :file_colon_line => step_result.file_colon_line,
             :duration => @duration
           }
         end
