@@ -4,7 +4,6 @@ require 'cucumber/step_definition_light'
 module Cucumber
   module Formatter
     class Usage < Progress
-      include Console
 
       class StepDefKey < StepDefinitionLight
         attr_accessor :mean_duration, :status
